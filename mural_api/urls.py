@@ -15,11 +15,9 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from rest_framework.authtoken.views import obtain_auth_token
-from rest_framework.routers import DefaultRouter
-
-router = DefaultRouter()
+from .routers import router
 
 urlpatterns = [
     url(r'^api/token/', obtain_auth_token, name='api-token'),
-    url(r'^api/', include(router.urls)),
+    url(r'^api/v1/', include(router.urls)),
 ]
