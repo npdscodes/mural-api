@@ -1,8 +1,8 @@
 from django.db import models
 
-from django.contrib.auth.models import User
-
 from django.utils.translation import ugettext_lazy as _
+
+from django.core.validators import RegexValidator
 
 
 class Profile(models.Model):
@@ -17,20 +17,22 @@ class Profile(models.Model):
         ('Feminino', _('Femninino')),
     )
 
-    nome = models.CharField(_('Nome'), max_length=100, null=False, blank=False)
-    sexo = models.CharField(_('Sexo'), max_length=10, choices=SEXO_CHOICES)
-    email = models.EmailField(max_length=50)
-    telefone = models.BigIntegerField()
-
-    def __str__(self):
-        return "%s - %s" % (self.nome, self.email)
+    nome = models.CharField(_('Nome'), max_length=150)
+    sexo = models.CharField(_('Sexo'), max_length=10, choices=SEXO_CHOICES, blank=True)
+    email = models.EmailField(max_length=50, unique=True)
+    telefone_validator = RegexValidator(regex='^\(\d{2}\) 9?\d{4}-\d{4}$', message=_('O numero telefone deve ser inserido no formato (XX) 9XXXX-XXXX'))
+    telefone = models.CharField(max_length=15, validators=[telefone_validator], blank=True)
 
 
 class Disciplina(models.Model):
-    nome = models.CharField(max_length=100)
+
+    nome = models.CharField(_('Nome'), max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
 class Turma(models.Model):
+
     professor = models.ForeignKey('Profile', on_delete=models.CASCADE, related_name="minhas_turmas")
     codigo = models.CharField(max_length=50)
     periodo = models.CharField(max_length=50)
@@ -38,5 +40,7 @@ class Turma(models.Model):
 
 
 class Inscricao(models.Model):
+
     profile = models.ForeignKey('Profile', on_delete=models.CASCADE, related_name='minhas_inscricoes')
     turma = models.ForeignKey('Turma', on_delete=models.CASCADE, related_name='alunos')
+
