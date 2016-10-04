@@ -11,7 +11,7 @@ class Profile(models.Model):
 	nome = models.CharField(max_length=100)
 	sexo = models.CharField(max_length=10, choices=SEXO_CHOICES)
 	email = models.EmailField(max_length=50)
-	telefone = BigIntegerField(max_length=11)
+	telefone = models.BigIntegerField()
 
 class Disciplina(models.Model):
 	nome = models.CharField(max_length=100)
