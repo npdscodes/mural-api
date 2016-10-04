@@ -28,12 +28,18 @@ class Profile(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return "%s - %s" % (self.nome, self.email)
+
 
 class Disciplina(models.Model):
 
     nome = models.CharField(_('Nome'), max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.nome
 
 
 class Turma(models.Model):
@@ -45,6 +51,9 @@ class Turma(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.codigo
+
 
 class Inscricao(models.Model):
 
@@ -53,3 +62,5 @@ class Inscricao(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return "%s - %s" % (self.profile, self.turma)
