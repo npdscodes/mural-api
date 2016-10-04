@@ -4,6 +4,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from django.core.validators import RegexValidator
 
+from django.cong import settings
+
 
 class Profile(models.Model):
     """
@@ -17,6 +19,7 @@ class Profile(models.Model):
         ('Feminino', _('Femninino')),
     )
 
+    user = models.OneToOneField(settings.AUTH_USER_MODEL)
     nome = models.CharField(_('Nome'), max_length=150)
     sexo = models.CharField(_('Sexo'), max_length=10, choices=SEXO_CHOICES, blank=True)
     email = models.EmailField(max_length=50, unique=True)
