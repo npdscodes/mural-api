@@ -6,14 +6,10 @@ from django.core.validators import RegexValidator
 
 from django.conf import settings
 
-
-class CreationAndUpdateMixin(object):
-
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+from .mixins import CreationAndUpdateMixin
 
 
-class Profile(models.Model, CreationAndUpdateMixin):
+class Profile(CreationAndUpdateMixin, models.Model):
     """
     Representa as pessoas no sistema. Dados gerais pessoais. Esta classe servirá de composição para
     Professor e Aluno dentro do sistema. Relaciona-se
@@ -36,7 +32,7 @@ class Profile(models.Model, CreationAndUpdateMixin):
         return "%s - %s" % (self.nome, self.email)
 
 
-class Disciplina(models.Model, CreationAndUpdateMixin):
+class Disciplina(CreationAndUpdateMixin, models.Model):
 
     nome = models.CharField(_('Nome'), max_length=100)
 
@@ -44,7 +40,7 @@ class Disciplina(models.Model, CreationAndUpdateMixin):
         return self.nome
 
 
-class Turma(models.Model, CreationAndUpdateMixin):
+class Turma(CreationAndUpdateMixin, models.Model):
 
     professor = models.ForeignKey('Profile', on_delete=models.CASCADE, related_name="minhas_turmas")
     codigo = models.CharField(max_length=50)
@@ -55,7 +51,7 @@ class Turma(models.Model, CreationAndUpdateMixin):
         return self.codigo
 
 
-class Inscricao(models.Model, CreationAndUpdateMixin):
+class Inscricao(CreationAndUpdateMixin, models.Model):
 
     profile = models.ForeignKey('Profile', on_delete=models.CASCADE, related_name='minhas_inscricoes')
     turma = models.ForeignKey('Turma', on_delete=models.CASCADE, related_name='alunos')
