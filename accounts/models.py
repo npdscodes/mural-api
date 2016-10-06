@@ -9,7 +9,7 @@ from django.conf import settings
 from .mixins import CreationAndUpdateMixin
 
 
-class Profile(CreationAndUpdateMixin, models.Model):
+class Profile(CreationAndUpdateMixin):
     """
     Representa as pessoas no sistema. Dados gerais pessoais. Esta classe servirá de composição para
     Professor e Aluno dentro do sistema. Relaciona-se
@@ -32,7 +32,7 @@ class Profile(CreationAndUpdateMixin, models.Model):
         return "%s - %s" % (self.nome, self.email)
 
 
-class Disciplina(CreationAndUpdateMixin, models.Model):
+class Disciplina(CreationAndUpdateMixin):
 
     nome = models.CharField(_('Nome'), max_length=100)
 
@@ -40,7 +40,7 @@ class Disciplina(CreationAndUpdateMixin, models.Model):
         return self.nome
 
 
-class Turma(CreationAndUpdateMixin, models.Model):
+class Turma(CreationAndUpdateMixin):
 
     professor = models.ForeignKey('Profile', on_delete=models.CASCADE, related_name="minhas_turmas")
     codigo = models.CharField(max_length=50)
@@ -51,7 +51,7 @@ class Turma(CreationAndUpdateMixin, models.Model):
         return self.codigo
 
 
-class Inscricao(CreationAndUpdateMixin, models.Model):
+class Inscricao(CreationAndUpdateMixin):
 
     profile = models.ForeignKey('Profile', on_delete=models.CASCADE, related_name='minhas_inscricoes')
     turma = models.ForeignKey('Turma', on_delete=models.CASCADE, related_name='alunos')
