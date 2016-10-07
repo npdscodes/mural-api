@@ -6,33 +6,33 @@ from django.core.validators import RegexValidator
 
 from django.conf import settings
 
-from .mixins import CreationAndUpdateMixin
+from .mixins import CriacaoEAtualizacaoMixin
 
 
-class Profile(CreationAndUpdateMixin):
+class Perfil(CriacaoEAtualizacaoMixin):
     """
     Representa as pessoas no sistema. Dados gerais pessoais. Esta classe servirá de composição para
     Professor e Aluno dentro do sistema. Relaciona-se
     com o User do django para fins de autenticação e atutorização.
     """
-    telefone_validator = RegexValidator(regex='^\(\d{2}\) 9?\d{4}-\d{4}$', message=_('O numero telefone deve ser inserido no formato (XX) 9XXXX-XXXX'))
+    telefone_validacao = RegexValidator(regex='^\(\d{2}\) 9?\d{4}-\d{4}$', message=_('O numero telefone deve ser inserido no formato (XX) 9XXXX-XXXX'))
 
     SEXO_CHOICES = (
         ('Masculino', _('Masculino')),
         ('Feminino', _('Femninino')),
     )
 
-    user = models.OneToOneField(settings.AUTH_USER_MODEL)
+    usuario = models.OneToOneField(settings.AUTH_USER_MODEL)
     nome = models.CharField(_('Nome'), max_length=150)
     sexo = models.CharField(_('Sexo'), max_length=10, choices=SEXO_CHOICES, blank=True)
     email = models.EmailField(max_length=50, unique=True)
-    telefone = models.CharField(max_length=15, validators=[telefone_validator], blank=True)
+    telefone = models.CharField(max_length=15, validators=[telefone_validacao], blank=True)
     
     def __str__(self):
         return "%s - %s" % (self.nome, self.email)
 
 
-class Disciplina(CreationAndUpdateMixin):
+class Disciplina(CriacaoEAtualizacaoMixin):
 
     nome = models.CharField(_('Nome'), max_length=100)
 
@@ -40,9 +40,9 @@ class Disciplina(CreationAndUpdateMixin):
         return self.nome
 
 
-class Turma(CreationAndUpdateMixin):
+class Turma(CriacaoEAtualizacaoMixin):
 
-    professor = models.ForeignKey('Profile', on_delete=models.CASCADE, related_name="minhas_turmas")
+    professor = models.ForeignKey('Perfil', on_delete=models.CASCADE, related_name="minhas_turmas")
     codigo = models.CharField(max_length=50)
     periodo = models.CharField(max_length=50)
     codigo_ativo = models.BooleanField()
@@ -51,10 +51,10 @@ class Turma(CreationAndUpdateMixin):
         return self.codigo
 
 
-class Inscricao(CreationAndUpdateMixin):
+class Inscricao(CriacaoEAtualizacaoMixin):
 
-    profile = models.ForeignKey('Profile', on_delete=models.CASCADE, related_name='minhas_inscricoes')
+    perfil = models.ForeignKey('Perfil', on_delete=models.CASCADE, related_name='minhas_inscricoes')
     turma = models.ForeignKey('Turma', on_delete=models.CASCADE, related_name='alunos')
 
     def __str__(self):
-        return "%s - %s" % (self.profile, self.turma)
+        return "%s - %s" % (self.perfil, self.turma)
