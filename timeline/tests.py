@@ -142,7 +142,7 @@ class TestModelComentarios(TestCase):
         resposta_2 = resposta_1.responder("Resposta 2")
         self.assertEquals(self.comentario.respostas.all().count(), 3)        
 
-    def test_comentario_pai_da_resposta_da_resposta_deve_ser_igual_ao_comentario_da_resposta_respondida(self):
+    def test_respostas_das_respostas_devem_constar_nas_respostas_do_comentario_geral(self):
         
         resposta = self.comentario.responder("Resposta 1")
         resposta_1 = resposta.responder("Resposta 2")
