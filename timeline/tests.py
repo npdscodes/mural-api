@@ -1,7 +1,5 @@
 from django.test import TestCase
 
-import unittest
-
 #Excecoes
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
