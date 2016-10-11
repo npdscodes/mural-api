@@ -2,7 +2,9 @@ from django.contrib.auth import get_user_model
 
 from rest_framework import viewsets, authentication, permissions, filters
 
-from .serializers import UserSerializer
+from .serializers import UserSerializer, PerfilSerializer
+
+from .models import Perfil
 
 
 User = get_user_model()
@@ -27,6 +29,7 @@ class DefaultsMixin(object):
         filters.OrderingFilter,
     )
 
+
 class UserViewSet(DefaultsMixin, viewsets.ReadOnlyModelViewSet):
     """API endpoint for listing users."""
 
@@ -35,3 +38,10 @@ class UserViewSet(DefaultsMixin, viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.order_by(User.USERNAME_FIELD)
     serializer_class = UserSerializer
     search_fields = (User.USERNAME_FIELD,)
+
+
+class PerfilViewSet(DefaultsMixin, viewsets.ModelViewSet):
+    """Endpoint para a criação e listagem de perfis"""
+
+    queryset = Perfil.objects.order_by('nome')
+    serializer_class = PerfilSerializer
