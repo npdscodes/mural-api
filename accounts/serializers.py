@@ -1,13 +1,13 @@
 from django.contrib.auth import get_user_model
 
-from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 
 from .models import Perfil
 
 User = get_user_model()
 
 
-class UserSerializer(ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
 
     full_name = serializers.CharField(source='get_full_name', read_only=True)
 
@@ -16,9 +16,9 @@ class UserSerializer(ModelSerializer):
         fields = ('id', User.USERNAME_FIELD, 'full_name', 'is_active', )
 
 
-class PerfilSerializer(ModelSerializer):
+class PerfilSerializer(serializers.ModelSerializer):
 
-    usuario = serializers.SlugRelatedField(slug_field=User.USERNAME_FIELD)
+    usuario = serializers.SlugRelatedField(slug_field=User.USERNAME_FIELD, queryset=User.objects.all())
 
     class Meta:
         model = Perfil
