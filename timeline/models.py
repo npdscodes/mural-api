@@ -2,6 +2,7 @@
 #Builtin django
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator
 
 #Builtin Python
 import re
@@ -23,33 +24,16 @@ class Comentario(models.Model):
 
     PAI , FILHO = "PAI" , "FILHO"
 
+    validador_tipo     = RegexValidator("PAI|FILHO",_("Tipo inválido : %(tipo)s"),code="Inconsistência")
+    validador_conteudo = RegexValidator("^\s*$",_("Conteúdo inválido : %(conteudo)s"),code="Inconsistência")
+
     raiz           = models.BooleanField(_("É raiz ?"),default=True)
-    tipo           = models.CharField(max_length=10,default=PAI,blank=False,null=False)
-    conteudo       = models.TextField(_("Conteúdo"),blank=False,null=False)
+    tipo           = models.CharField(max_length=10,default=PAI,blank=False,null=False,validators=[validador_tipo])
+    conteudo       = models.TextField(_("Conteúdo"),blank=False,null=False,validators=[validador_conteudo])
     criado_em      = models.DateTimeField(auto_now_add=True)
     perfil         = models.ForeignKey(Perfil,null=False,blank=False,on_delete=models.CASCADE,related_name="meus_comentarios")
     postagem       = models.ForeignKey(Postagem,null=False,on_delete=models.CASCADE,related_name="comentarios")
     comentario_pai = models.ForeignKey('self',default=None,null=True,on_delete=models.CASCADE,related_name="respostas")
-
-    def save(self,*args,**kwargs):
-
-        if re.match("^\s*$",self.conteudo):
-            
-            raise ValidationError(
-                _("Conteúdo inválido : %(conteudo)s"),
-                code="Inconsistência",
-                params={"conteudo":self.conteudo}
-            )
-
-        if not re.match("PAI|FILHO",self.tipo):
-
-            raise ValidationError(
-                _("Tipo inválido : %(tipo)s"),
-                code="Inconsistência",
-                params={"tipo":self.tipo}
-            )
-
-        super(Comentario,self).save(*args,**kwargs)
 
     def responder(self,comentario):
 

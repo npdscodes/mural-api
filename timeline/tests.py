@@ -35,6 +35,8 @@ class TestModelComentarios(TestCase):
         with self.assertRaises(ValidationError):
             comentario = mommy.make(Comentario,tipo="MAE")
 
+            comentario.full_clean()
+
     def test_deve_gerar_excecao_quando_nao_houver_postagem_associada(self):
 
         with self.assertRaises(IntegrityError):
@@ -62,13 +64,15 @@ class TestModelComentarios(TestCase):
                 postagem=self.postagem
             )
 
+            comentario.full_clean()
+
     def test_deve_gerar_excecao_quando_tentar_responder_uma_resposta(self):
 
         resposta = self.comentario.responder("Resposta 1")
 
         with self.assertRaises(TypeError):
             resposta.responder("Resposta da resposta")
-            
+
     def test_deve_retornar_id_da_resposta_feita_para_o_comentario(self):
 
         resposta = self.comentario.responder("Comentário de resposta")
