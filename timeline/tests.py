@@ -5,11 +5,20 @@ from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 
 #Modelos
-from .models import Comentario , Postagem
+from .models import Comentario, Postagem
 from accounts.models import Perfil
 
 #Factory dados fake
 from model_mommy import mommy
+
+def retornar_ids(lista):
+    from django.db.models.query import QuerySet
+
+    if isinstance(lista, QuerySet):
+        return list(lista.values_list("id", flat=True))
+
+    elif isinstance(lista, list):
+        return [ elemento.id for elemento in lista]
 
 class TestModelComentarios(TestCase):
 
@@ -64,12 +73,6 @@ class TestModelComentarios(TestCase):
 
             comentario.full_clean()
 
-    def test_deve_gerar_excecao_quando_tentar_responder_uma_resposta(self):
-
-        resposta = self.comentario.responder("Resposta 1")
-
-        with self.assertRaises(TypeError):
-            resposta.responder("Resposta da resposta")
 
     def test_deve_retornar_id_da_resposta_feita_para_o_comentario(self):
 
@@ -85,14 +88,21 @@ class TestModelComentarios(TestCase):
 
         self.assertEquals(resposta.conteudo,"Resposta 1")
 
-    def test_deve_retornar_quantidade_correta_de_respostas_do_comentario(self):
+    def test_deve_retornar_respostas_associadas_ao_comentario(self):
 
-        self.comentario.responder("Resposta 1")
-        self.comentario.responder("Resposta 2")
-        self.comentario.responder("Resposta 3")
+        resposta_1 = self.comentario.responder("Resposta 1")
+        resposta_2 = self.comentario.responder("Resposta 2")
+        resposta_3 = self.comentario.responder("Resposta 3")
+
+        #Obtendo somente os id das respostas no banco
+        ids_resposta_banco = retornar_ids(self.comentario.respostas.all())
+
+        #Filtrando somente os ids das respostas feitas.
+        ids = retornar_ids([resposta_1, resposta_2, resposta_3])
+
+        self.assertListEqual(ids_resposta_banco, ids)
 
         quantidade = self.comentario.respostas.all().count()
-
         self.assertEquals(quantidade,3)
 
     def test_todas_as_respostas_devem_ter_o_tipo_como_filho(self):
@@ -120,3 +130,26 @@ class TestModelComentarios(TestCase):
         resposta = comentario.responder("Resposta 1")
 
         self.assertEquals(resposta.comentario_pai.id,comentario.id)
+
+    def test_quando_responder_uma_resposta_deve_incrementar_respostas_do_comentario_pai(self):
+
+        resposta = self.comentario.responder("Resposta 1")
+        self.assertEquals(self.comentario.respostas.all().count(), 1)
+    
+        resposta_1 = resposta.responder("Resposta 2")
+        self.assertEquals(self.comentario.respostas.all().count(), 2)
+
+        resposta_2 = resposta_1.responder("Resposta 2")
+        self.assertEquals(self.comentario.respostas.all().count(), 3)        
+
+    def test_comentario_pai_da_resposta_da_resposta_deve_ser_igual_ao_comentario_da_resposta_respondida(self):
+        
+        resposta = self.comentario.responder("Resposta 1")
+        resposta_1 = resposta.responder("Resposta 2")
+        resposta_2 = resposta_1.responder("Resposta 3")
+
+        respostas_geral = retornar_ids(self.comentario.respostas.all())
+
+        respostas_filhas = retornar_ids([resposta_1, resposta_2])
+
+        self.assertTrue( set(respostas_filhas).issubset(set(respostas_geral)) )

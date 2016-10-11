@@ -44,17 +44,18 @@ class Comentario(models.Model):
 
     def responder(self,comentario):
 
-        if self.tipo == self.FILHO and self.comentario_pai:
-            raise TypeError("Operação não permitida")
-        
         resposta = Comentario.objects.create(
             raiz=False,
             tipo=self.FILHO,
             conteudo=comentario,
             perfil=self.perfil,
-            postagem=self.postagem,
-            comentario_pai=self
+            postagem=self.postagem
         )
+
+        if self.tipo == "FILHO":
+            resposta.comentario_pai = self.comentario_pai
+        else:
+            resposta.comentario_pai = self
         
         resposta.save()
         return resposta
