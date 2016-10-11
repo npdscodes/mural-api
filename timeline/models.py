@@ -22,31 +22,31 @@ class Postagem(models.Model):
 
 class Comentario(models.Model):
 
-    PAI , FILHO = "PAI" , "FILHO"
+    PAI, FILHO = "PAI", "FILHO"
 
-    validador_tipo     = RegexValidator("PAI|FILHO",
+    validador_tipo = RegexValidator("PAI|FILHO",
                             _("Tipo inválido"),
                             code="Inconsistência"
-                        )
+                    )
 
     validador_conteudo = RegexValidator("^\s*$",
                             _("Conteúdo inválido"),
                             code="Inconsistência"
                         )
 
-    raiz           = models.BooleanField(_("É raiz ?"),default=True)
-    tipo           = models.CharField(max_length=10,default=PAI,blank=False,null=False,validators=[validador_tipo])
-    conteudo       = models.TextField(_("Conteúdo"),blank=False,null=False,validators=[validador_conteudo])
-    criado_em      = models.DateTimeField(auto_now_add=True)
-    perfil         = models.ForeignKey(Perfil,null=False,blank=False,on_delete=models.CASCADE,related_name="meus_comentarios")
-    postagem       = models.ForeignKey(Postagem,null=False,on_delete=models.CASCADE,related_name="comentarios")
-    comentario_pai = models.ForeignKey('self',default=None,null=True,on_delete=models.CASCADE,related_name="respostas")
+    raiz = models.BooleanField(_("É raiz ?"), default=True)
+    tipo = models.CharField(max_length=10, default=PAI, blank=False, null=False, validators=[validador_tipo])
+    conteudo = models.TextField(_("Conteúdo"), blank=False, null=False, validators=[validador_conteudo])
+    criado_em = models.DateTimeField(auto_now_add=True)
+    perfil = models.ForeignKey(Perfil, null=False, blank=False, on_delete=models.CASCADE, related_name="meus_comentarios")
+    postagem = models.ForeignKey(Postagem, null=False, on_delete=models.CASCADE, related_name="comentarios")
+    comentario_pai = models.ForeignKey('self', default=None, null=True, on_delete=models.CASCADE, related_name="respostas")
 
     def responder(self,comentario):
 
         if self.tipo == self.FILHO and self.comentario_pai:
             raise TypeError("Operação não permitida")
-
+        
         resposta = Comentario.objects.create(
             raiz=False,
             tipo=self.FILHO,
@@ -55,7 +55,7 @@ class Comentario(models.Model):
             postagem=self.postagem,
             comentario_pai=self
         )
-
+        
         resposta.save()
         return resposta
 
