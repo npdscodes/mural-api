@@ -7,6 +7,7 @@ router = DefaultRouter()
 
 #accounts endpoints
 router.register(r'users', accounts_viewsets.UserViewSet)
+router.register(r'perfil', accounts_viewsets.PerfilViewSet)
 
 #timeline_endpoints
 #router.register(r'postagens', timeline_viewsets.PostagemViewSet
