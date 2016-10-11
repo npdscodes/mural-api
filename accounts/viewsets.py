@@ -45,3 +45,5 @@ class PerfilViewSet(DefaultsMixin, viewsets.ModelViewSet):
 
     queryset = Perfil.objects.order_by('nome')
     serializer_class = PerfilSerializer
+    search_fields = ('nome', 'email',)
+    ordering_fields = ('nome', 'email',)
