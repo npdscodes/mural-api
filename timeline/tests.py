@@ -62,6 +62,13 @@ class TestModelComentarios(TestCase):
                 postagem=self.postagem
             )
 
+    def test_deve_gerar_excecao_quando_tentar_responder_uma_resposta(self):
+
+        resposta = self.comentario.responder("Resposta 1")
+
+        with self.assertRaises(TypeError):
+            resposta.responder("Resposta da resposta")
+            
     def test_deve_retornar_id_da_resposta_feita_para_o_comentario(self):
 
         resposta = self.comentario.responder("Comentário de resposta")
