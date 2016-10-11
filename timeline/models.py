@@ -25,15 +25,13 @@ class Comentario(models.Model):
     PAI , FILHO = "PAI" , "FILHO"
 
     validador_tipo     = RegexValidator("PAI|FILHO",
-                            _("Tipo inválido : %(tipo)s"),
-                            code="Inconsistência",
-                            params={"tipo":self.tipo}
+                            _("Tipo inválido"),
+                            code="Inconsistência"
                         )
 
     validador_conteudo = RegexValidator("^\s*$",
-                            _("Conteúdo inválido : %(conteudo)s"),
-                            code="Inconsistência",
-                            params={"conteudo":self.conteudo}
+                            _("Conteúdo inválido"),
+                            code="Inconsistência"
                         )
 
     raiz           = models.BooleanField(_("É raiz ?"),default=True)
