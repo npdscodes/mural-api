@@ -22,7 +22,10 @@ class Postagem(models.Model):
 
 class Comentario(models.Model):
 
-    PAI, FILHO = "PAI", "FILHO"
+    TIPO_COMENTARIO = (
+        ("PAI","Pai"),
+        ("FILHO","Filho")
+    )
 
     validador_tipo = RegexValidator("PAI|FILHO",
                             _("Tipo inválido"),
@@ -35,7 +38,7 @@ class Comentario(models.Model):
                         )
 
     raiz = models.BooleanField(_("É raiz ?"), default=True)
-    tipo = models.CharField(max_length=10, default=PAI, blank=False, null=False, validators=[validador_tipo])
+    tipo = models.CharField(max_length=10, choices=TIPO_COMENTARIO,default="PAI", blank=False, null=False, validators=[validador_tipo])
     conteudo = models.TextField(_("Conteúdo"), blank=False, null=False, validators=[validador_conteudo])
     criado_em = models.DateTimeField(auto_now_add=True)
     perfil = models.ForeignKey(Perfil, null=False, blank=False, on_delete=models.CASCADE, related_name="meus_comentarios")
@@ -46,7 +49,7 @@ class Comentario(models.Model):
 
         resposta = Comentario.objects.create(
             raiz=False,
-            tipo=self.FILHO,
+            tipo="FILHO",
             conteudo=comentario,
             perfil=self.perfil,
             postagem=self.postagem

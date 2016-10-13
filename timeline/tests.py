@@ -153,3 +153,23 @@ class TestModelComentarios(TestCase):
         respostas_filhas = retornar_ids([resposta_1, resposta_2])
 
         self.assertTrue( set(respostas_filhas).issubset(set(respostas_geral)) )
+
+    def test_quando_deletar_a_postagem_deletar_todos_os_comentarios_relacionados(self):
+
+        comentario = mommy.make(Comentario,postagem=self.postagem)
+
+        self.postagem.delete()
+
+        comentarios_da_postagem = Comentario.objects.filter(postagem=self.postagem.id)
+
+        self.assertEquals(0,len(comentarios_da_postagem))
+
+    def test_quando_deletar_o_usuario_deletar_comentarios_relacionados_a_ele(self):
+
+        comentario = mommy.make(Comentario,perfil=self.perfil,postagem=self.postagem)
+
+        self.perfil.delete()
+
+        comentarios_perfil = Comentario.objects.filter(perfil=self.perfil)
+
+        self.assertEquals(0,len(comentarios_perfil))
