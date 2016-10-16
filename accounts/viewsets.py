@@ -2,9 +2,9 @@ from django.contrib.auth import get_user_model
 
 from rest_framework import viewsets, authentication, permissions, filters
 
-from .serializers import UserSerializer, PerfilSerializer
+from .serializers import UserSerializer, PerfilSerializer, DisciplinaSerializer, TurmaSerializer, InscricaoSerializer
 
-from .models import Perfil
+from .models import Perfil, Disciplina, Turma, Inscricao
 
 
 User = get_user_model()
@@ -47,3 +47,28 @@ class PerfilViewSet(DefaultsMixin, viewsets.ModelViewSet):
     serializer_class = PerfilSerializer
     search_fields = ('nome', 'email',)
     ordering_fields = ('nome', 'email',)
+
+
+class DisciplinaViewSet(DefaultsMixin, viewsets.ModelViewSet):
+    """Endpoint para a criação e listagem das disciplinas"""
+
+    queryset = Disciplina.objects.all()
+    serializer_class = DisciplinaSerializer
+    search_fields = ('nome',)
+    ordering_fields = ('nome',)
+
+
+class TurmaViewSet(DefaultsMixin, viewsets.ModelViewSet):
+    """Endpoint para a criação e listagem das disciplinas"""
+
+    queryset = Turma.objects.order_by('codigo')
+    serializer_class = TurmaSerializer
+    search_fields = ('professor', 'codigo')
+    ordering_fields = ('codigo')
+
+
+class InscricaoViewSet(DefaultsMixin, viewsets.ModelViewSet):
+    """Endpoint para a criação e listagem das disciplinas"""
+
+    queryset = Inscricao.objects.all()
+    serializer_class = InscricaoSerializer
