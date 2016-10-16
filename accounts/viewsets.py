@@ -59,16 +59,18 @@ class DisciplinaViewSet(DefaultsMixin, viewsets.ModelViewSet):
 
 
 class TurmaViewSet(DefaultsMixin, viewsets.ModelViewSet):
-    """Endpoint para a criação e listagem das disciplinas"""
+    """Endpoint para a criação e listagem das turmas"""
 
     queryset = Turma.objects.order_by('codigo')
     serializer_class = TurmaSerializer
-    search_fields = ('professor', 'codigo')
-    ordering_fields = ('codigo')
+    search_fields = ('professor', 'codigo',)
+    ordering_fields = ('codigo',)
 
 
 class InscricaoViewSet(DefaultsMixin, viewsets.ModelViewSet):
-    """Endpoint para a criação e listagem das disciplinas"""
+    """Endpoint para a criação e listagem das inscrições"""
 
     queryset = Inscricao.objects.all()
     serializer_class = InscricaoSerializer
+    search_fields = ('perfil', 'turma',)
+    ordering_fields = ('perfil', 'turma',)
