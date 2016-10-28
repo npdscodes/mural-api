@@ -38,6 +38,7 @@ class UserViewSet(DefaultsMixin, viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.order_by(User.USERNAME_FIELD)
     serializer_class = UserSerializer
     search_fields = (User.USERNAME_FIELD,)
+    ordering_fields = ('username', 'first_name', 'last_name', 'email')
 
 
 class PerfilViewSet(DefaultsMixin, viewsets.ModelViewSet):
