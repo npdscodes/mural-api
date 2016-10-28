@@ -42,13 +42,14 @@ class Disciplina(CriacaoEAtualizacaoMixin):
 
 class Turma(CriacaoEAtualizacaoMixin):
 
-    professor = models.ForeignKey('Perfil', on_delete=models.CASCADE, related_name="minhas_turmas")
+    professor = models.ForeignKey('Perfil', on_delete=models.CASCADE, related_name="minhas_turmas", blank=False)
     codigo = models.CharField(max_length=50)
     periodo = models.CharField(max_length=50)
     codigo_ativo = models.BooleanField()
+    disciplina = models.ForeignKey('Disciplina', related_name="turmas", null=True)
 
     def __str__(self):
-        return self.codigo
+        return "{} - {}".format(self.disciplina.nome, self.professor.nome)
 
 
 class Inscricao(CriacaoEAtualizacaoMixin):

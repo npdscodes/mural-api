@@ -7,7 +7,10 @@ router = DefaultRouter()
 
 #accounts endpoints
 router.register(r'users', accounts_viewsets.UserViewSet)
-router.register(r'perfil', accounts_viewsets.PerfilViewSet)
+router.register(r'perfis', accounts_viewsets.PerfilViewSet)
+router.register(r'disciplinas', accounts_viewsets.DisciplinaViewSet)
+router.register(r'turmas', accounts_viewsets.TurmaViewSet)
+router.register(r'inscricoes', accounts_viewsets.InscricaoViewSet)
 
 #timeline_endpoints
 #router.register(r'postagens', timeline_viewsets.PostagemViewSet
