@@ -118,7 +118,8 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
-
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 STATIC_URL = '/static/'
 
 
@@ -131,3 +132,6 @@ AT_HEROKU = config('AT_HEROKU', cast=bool)
 if AT_HEROKU:
     import dj_database_url
     DATABASES['default'] =  dj_database_url.config()
+
+    # Whitenoise: https://devcenter.heroku.com/articles/django-assets
+    STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
