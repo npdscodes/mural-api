@@ -76,7 +76,7 @@ class TestModelComentarios(TestCase):
 
     def test_deve_retornar_id_da_resposta_feita_para_o_comentario(self):
 
-        resposta = self.comentario.responder("Comentário de resposta")
+        resposta = self.comentario.responder(self.perfil, "Comentário de resposta")
 
         ultima_resposta = self.comentario.respostas.latest('id')
 
@@ -84,15 +84,15 @@ class TestModelComentarios(TestCase):
 
     def test_deve_retornar_o_conteudo_da_resposta_corretamente(self):
 
-        resposta = self.comentario.responder("Resposta 1")
+        resposta = self.comentario.responder(self.perfil, "Resposta 1")
 
         self.assertEquals(resposta.conteudo,"Resposta 1")
 
     def test_deve_retornar_respostas_associadas_ao_comentario(self):
 
-        resposta_1 = self.comentario.responder("Resposta 1")
-        resposta_2 = self.comentario.responder("Resposta 2")
-        resposta_3 = self.comentario.responder("Resposta 3")
+        resposta_1 = self.comentario.responder(self.perfil, "Resposta 1")
+        resposta_2 = self.comentario.responder(self.perfil, "Resposta 2")
+        resposta_3 = self.comentario.responder(self.perfil, "Resposta 3")
 
         #Obtendo somente os id das respostas no banco
         ids_resposta_banco = retornar_ids(self.comentario.respostas.all())
@@ -107,9 +107,9 @@ class TestModelComentarios(TestCase):
 
     def test_todas_as_respostas_devem_ter_o_tipo_como_filho(self):
 
-        self.comentario.responder("Resposta 1")
-        self.comentario.responder("Resposta 2")
-        self.comentario.responder("Resposta 3")
+        self.comentario.responder(self.perfil, "Resposta 1")
+        self.comentario.responder(self.perfil, "Resposta 2")
+        self.comentario.responder(self.perfil, "Resposta 3")
 
         tipo_verificado = lambda tipo : tipo == "FILHO"
 
@@ -127,26 +127,26 @@ class TestModelComentarios(TestCase):
             perfil=self.perfil
         )
 
-        resposta = comentario.responder("Resposta 1")
+        resposta = comentario.responder(self.perfil, "Resposta 1")
 
         self.assertEquals(resposta.comentario_pai.id,comentario.id)
 
     def test_quando_responder_uma_resposta_deve_incrementar_respostas_do_comentario_pai(self):
 
-        resposta = self.comentario.responder("Resposta 1")
+        resposta = self.comentario.responder(self.perfil, "Resposta 1")
         self.assertEquals(self.comentario.respostas.all().count(), 1)
     
-        resposta_1 = resposta.responder("Resposta 2")
+        resposta_1 = resposta.responder(self.perfil, "Resposta 2")
         self.assertEquals(self.comentario.respostas.all().count(), 2)
 
-        resposta_2 = resposta_1.responder("Resposta 2")
+        resposta_2 = resposta_1.responder(self.perfil, "Resposta 2")
         self.assertEquals(self.comentario.respostas.all().count(), 3)        
 
     def test_respostas_das_respostas_devem_constar_nas_respostas_do_comentario_geral(self):
         
-        resposta = self.comentario.responder("Resposta 1")
-        resposta_1 = resposta.responder("Resposta 2")
-        resposta_2 = resposta_1.responder("Resposta 3")
+        resposta = self.comentario.responder(self.perfil, "Resposta 1")
+        resposta_1 = resposta.responder(self.perfil, "Resposta 2")
+        resposta_2 = resposta_1.responder(self.perfil, "Resposta 3")
 
         respostas_geral = retornar_ids(self.comentario.respostas.all())
 
