@@ -42,7 +42,7 @@ class TurmaSerializer(serializers.ModelSerializer):
         fields = ('id', 'codigo', 'periodo', 'codigo_ativo', 'professor', 'disciplina', 'qtd_inscritos')
 
     def get_qtd_inscritos(self, obj):
-        qtd = Disciplina.objects.filter(pk=obj.pk).count()
+        qtd = Inscricao.objects.filter(turma=obj).count()
         return qtd
 
 
