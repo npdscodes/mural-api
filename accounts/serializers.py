@@ -4,8 +4,6 @@ from rest_framework import serializers
 
 from .models import Perfil, Disciplina, Turma, Inscricao
 
-from django.urls import reverse
-
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -21,41 +19,18 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class PerfilSerializer(serializers.ModelSerializer):
-    usuario = serializers.SlugRelatedField(slug_field=User.USERNAME_FIELD, queryset=User.objects.all())
+    usuario = serializers.SlugRelatedField(slug_field=User.USERNAME_FIELD, read_only=True)
+    nome_usuario = serializers.SlugField(required=True, write_only=True)
+    senha = serializers.CharField(required=True, min_length=4, allow_blank=False, write_only=True)
 
     class Meta:
         model = Perfil
-        fields = ('id', 'usuario', 'nome', 'email',)
+        fields = ('id', 'usuario', 'nome_usuario', 'nome', 'email','senha')
 
 
-class PerfilSignUpSerializer(serializers.Serializer):
-    usuario =  serializers.SlugField(required=True, allow_blank=False, max_length=50)
-    nome = serializers.CharField(required=True)
-    email = serializers.EmailField()
-    senha = serializers.CharField(min_length=6, required=True, write_only=True)
-
-    def create(self, validated_data):
-        usuario = validated_data.get('usuario')
-        email = validated_data.get('email')
-        senha = validated_data.get('senha')
-        nome = validated_data.get('nome')
-
-        user = User.objects.create_user(username=usuario, email=email, password=senha)
-        perfil = Perfil(usuario=user, nome=nome, email=email)
-        perfil.save()
-
-        return perfil
-
-    def validate_usuario(self, value):
+    def validate_nome_usuario(self, value):
         if User.objects.filter(username=value).exists():
-            msg = _('Usuário já existe.')
-            raise serializers.ValidationError(msg)
-
-        return value
-
-    def validate_email(self, value):
-        if User.objects.filter(email=value).exists() or Perfil.objects.filter(email=value):
-            msg = _('Email já cadastrado.')
+            msg = _('Já existe um perfil para este nome de usuário: {}'.format(value))
             raise serializers.ValidationError(msg)
 
         return value
