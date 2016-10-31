@@ -58,12 +58,12 @@ class PerfilViewSet(DefaultsMixin, viewsets.ModelViewSet):
 
         if serializer.is_valid():
             validated_data = serializer.validated_data
-            usuario = validated_data.get('nome_usuario')
+            login = validated_data.get('nome_usuario')
             email = validated_data.get('email')
             senha = validated_data.get('senha')
             nome = validated_data.get('nome')
 
-            user = User.objects.create_user(username=usuario, email=email, password=senha)
+            user = User.objects.create_user(username=login, email=email, password=senha)
             perfil = Perfil(usuario=user, nome=nome, email=email)
             perfil.save()
 

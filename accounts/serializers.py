@@ -20,17 +20,17 @@ class UserSerializer(serializers.ModelSerializer):
 
 class PerfilSerializer(serializers.ModelSerializer):
     usuario = serializers.SlugRelatedField(slug_field=User.USERNAME_FIELD, read_only=True)
-    nome_usuario = serializers.SlugField(required=True, write_only=True)
+    login = serializers.SlugField(required=True, write_only=True)
     senha = serializers.CharField(required=True, min_length=4, allow_blank=False, write_only=True)
 
     class Meta:
         model = Perfil
-        fields = ('id', 'usuario', 'nome_usuario', 'nome', 'email','senha')
+        fields = ('id', 'usuario', 'login', 'nome', 'email','senha')
 
 
-    def validate_nome_usuario(self, value):
+    def validate_login(self, value):
         if User.objects.filter(username=value).exists():
-            msg = _('Já existe um perfil para este nome de usuário: {}'.format(value))
+            msg = _('Já existe um Perfil para este login: {}'.format(value))
             raise serializers.ValidationError(msg)
 
         return value
