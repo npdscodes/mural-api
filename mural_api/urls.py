@@ -14,10 +14,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url, include
-from rest_framework.authtoken.views import obtain_auth_token
+
 from .routers import router
 
+from rest_framework.authtoken.views import obtain_auth_token
+
 from rest_framework_swagger.views import get_swagger_view
+
 
 schema_view = get_swagger_view(title='MURAL API')
 

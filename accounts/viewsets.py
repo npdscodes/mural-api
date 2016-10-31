@@ -1,6 +1,10 @@
 from django.contrib.auth import get_user_model
 
 from rest_framework import viewsets, authentication, permissions, filters
+from rest_framework.response import Response
+from rest_framework import status
+
+from rest_framework.decorators import detail_route
 
 from .serializers import UserSerializer, PerfilSerializer, DisciplinaSerializer, TurmaSerializer, InscricaoSerializer
 
@@ -48,6 +52,24 @@ class PerfilViewSet(DefaultsMixin, viewsets.ModelViewSet):
     serializer_class = PerfilSerializer
     search_fields = ('nome', 'email',)
     ordering_fields = ('nome', 'email',)
+
+    def create(self, request, *args, **kwargs):
+        serializer = PerfilSerializer(data=request.data)
+
+        if serializer.is_valid():
+            validated_data = serializer.validated_data
+            login = validated_data.get('nome_usuario')
+            email = validated_data.get('email')
+            senha = validated_data.get('senha')
+            nome = validated_data.get('nome')
+
+            user = User.objects.create_user(username=login, email=email, password=senha)
+            perfil = Perfil(usuario=user, nome=nome, email=email)
+            perfil.save()
+
+            return Response(status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class DisciplinaViewSet(DefaultsMixin, viewsets.ModelViewSet):

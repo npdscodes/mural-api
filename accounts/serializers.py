@@ -4,6 +4,9 @@ from rest_framework import serializers
 
 from .models import Perfil, Disciplina, Turma, Inscricao
 
+from django.utils.translation import ugettext_lazy as _
+
+
 User = get_user_model()
 
 
@@ -16,11 +19,21 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class PerfilSerializer(serializers.ModelSerializer):
-    usuario = serializers.SlugRelatedField(slug_field=User.USERNAME_FIELD, queryset=User.objects.all())
+    usuario = serializers.SlugRelatedField(slug_field=User.USERNAME_FIELD, read_only=True)
+    login = serializers.SlugField(required=True, write_only=True)
+    senha = serializers.CharField(required=True, min_length=4, allow_blank=False, write_only=True)
 
     class Meta:
         model = Perfil
-        fields = ('id', 'usuario', 'nome', 'email',)
+        fields = ('id', 'usuario', 'login', 'nome', 'email','senha')
+
+
+    def validate_login(self, value):
+        if User.objects.filter(username=value).exists():
+            msg = _('Já existe um Perfil para este login: {}'.format(value))
+            raise serializers.ValidationError(msg)
+
+        return value
 
 
 class DisciplinaSerializer(serializers.ModelSerializer):
