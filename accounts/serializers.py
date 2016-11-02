@@ -52,11 +52,12 @@ class TurmaSerializer(serializers.ModelSerializer):
     professor = serializers.PrimaryKeyRelatedField(many=False, queryset=Perfil.objects.all())
     disciplina = serializers.PrimaryKeyRelatedField(many=False, queryset=Disciplina.objects.all())
     codigo = serializers.CharField(read_only=True)
+    codigo_ativo = serializers.CharField(read_only=True)
     qtd_inscritos = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Turma
-        fields = ('id', 'codigo', 'periodo', 'codigo_ativo', 'professor', 'disciplina', 'qtd_inscritos')
+        fields = ('id', 'codigo', 'nome', 'periodo', 'codigo_ativo', 'professor', 'disciplina', 'qtd_inscritos')
 
     def get_qtd_inscritos(self, obj):
         qtd = Inscricao.objects.filter(turma=obj).count()

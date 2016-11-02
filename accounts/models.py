@@ -51,8 +51,9 @@ class Turma(CriacaoEAtualizacaoMixin):
 
     professor = models.ForeignKey('Perfil', on_delete=models.CASCADE, related_name="minhas_turmas", blank=False)
     codigo = models.CharField(max_length=4, editable=False, unique=True)
+    nome = models.CharField(_('Descrição da Turma'), max_length=100, default="", blank=False)
     periodo = models.CharField(max_length=50)
-    codigo_ativo = models.BooleanField()
+    codigo_ativo = models.BooleanField(default=True)
     disciplina = models.ForeignKey('Disciplina', related_name="turmas", null=True)
 
     def save(self, *args, **kwargs):
