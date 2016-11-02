@@ -21,11 +21,11 @@ class Perfil(CriacaoEAtualizacaoMixin):
 
     SEXO_CHOICES = (
         ('Masculino', _('Masculino')),
-        ('Feminino', _('Femninino')),
+        ('Feminino', _('Feminino')),
     )
 
     usuario = models.OneToOneField(settings.AUTH_USER_MODEL)
-    nome = models.CharField(_('Nome'), max_length=150)
+    nome = models.CharField(_('Nome'), max_length=150, editable=False)
     sexo = models.CharField(_('Sexo'), max_length=10, choices=SEXO_CHOICES, blank=True)
     email = models.EmailField(max_length=50, unique=True)
     telefone = models.CharField(max_length=15, validators=[telefone_validacao], blank=True)

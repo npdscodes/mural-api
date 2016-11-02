@@ -25,8 +25,7 @@ class PerfilSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Perfil
-        fields = ('id', 'usuario', 'login', 'nome', 'email','senha')
-
+        fields = ('id', 'usuario', 'login', 'nome', 'sexo', 'email','senha')
 
     def validate_login(self, value):
         if User.objects.filter(username=value).exists():

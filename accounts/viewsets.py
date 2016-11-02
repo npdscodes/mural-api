@@ -1,13 +1,10 @@
 from django.contrib.auth import get_user_model
 
-from rest_framework import viewsets, authentication, permissions, filters
+from rest_framework import viewsets, authentication, filters, status, mixins, permissions
 from rest_framework.response import Response
-from rest_framework import status
-
-from rest_framework.decorators import detail_route
+from rest_framework.generics import GenericAPIView
 
 from .serializers import UserSerializer, PerfilSerializer, DisciplinaSerializer, TurmaSerializer, InscricaoSerializer
-
 from .models import Perfil, Disciplina, Turma, Inscricao
 
 
@@ -45,15 +42,11 @@ class UserViewSet(DefaultsMixin, viewsets.ReadOnlyModelViewSet):
     ordering_fields = ('username', 'first_name', 'last_name', 'email')
 
 
-class PerfilViewSet(DefaultsMixin, viewsets.ModelViewSet):
-    """Endpoint para a criação e listagem de perfis"""
+class SignUpView(GenericAPIView):
 
-    queryset = Perfil.objects.order_by('nome')
-    serializer_class = PerfilSerializer
-    search_fields = ('nome', 'email',)
-    ordering_fields = ('nome', 'email',)
+    permission_classes = (permissions.AllowAny, )
 
-    def create(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         serializer = PerfilSerializer(data=request.data)
 
         if serializer.is_valid():
@@ -70,6 +63,19 @@ class PerfilViewSet(DefaultsMixin, viewsets.ModelViewSet):
             return Response(status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PerfilViewSet(DefaultsMixin,
+                    mixins.ListModelMixin,
+                    mixins.RetrieveModelMixin,
+                    mixins.DestroyModelMixin,
+                    viewsets.GenericViewSet):
+    """Endpoint para a Consulta e Remoção de perfis"""
+
+    queryset = Perfil.objects.all()
+    serializer_class = PerfilSerializer
+    search_fields = ('nome', 'email',)
+    ordering_fields = ('nome', 'email',)
 
 
 class DisciplinaViewSet(DefaultsMixin, viewsets.ModelViewSet):
