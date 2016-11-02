@@ -48,6 +48,9 @@ class Turma(CriacaoEAtualizacaoMixin):
     codigo_ativo = models.BooleanField()
     disciplina = models.ForeignKey('Disciplina', related_name="turmas", null=True)
 
+    class Meta:
+        ordering = ['-criado_em']
+
     def __str__(self):
         return "{} - {}".format(self.disciplina.nome, self.professor.nome)
 
@@ -56,6 +59,9 @@ class Inscricao(CriacaoEAtualizacaoMixin):
 
     perfil = models.ForeignKey('Perfil', on_delete=models.CASCADE, related_name='minhas_inscricoes')
     turma = models.ForeignKey('Turma', on_delete=models.CASCADE, related_name='alunos')
+
+    class Meta:
+        ordering = ['perfil__nome']
 
     def __str__(self):
         return "%s - %s" % (self.perfil, self.turma)

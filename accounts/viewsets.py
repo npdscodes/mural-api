@@ -27,7 +27,7 @@ class UserViewSet(ViewsetPadraoMixin, viewsets.ReadOnlyModelViewSet):
 class PerfilViewSet(ViewsetPadraoMixin, viewsets.ModelViewSet):
     """Endpoint para a criação e listagem de perfis"""
 
-    queryset = Perfil.objects.order_by('nome')
+    queryset = Perfil.objects.all()
     serializer_class = PerfilSerializer
     search_fields = ('nome', 'email',)
     ordering_fields = ('nome', 'email',)
@@ -45,7 +45,7 @@ class DisciplinaViewSet(ViewsetPadraoMixin, viewsets.ModelViewSet):
 class TurmaViewSet(ViewsetPadraoMixin, viewsets.ModelViewSet):
     """Endpoint para a criação e listagem das turmas"""
 
-    queryset = Turma.objects.order_by('codigo')
+    queryset = Turma.objects.all()
     serializer_class = TurmaSerializer
     search_fields = ('professor', 'codigo',)
     ordering_fields = ('codigo',)

@@ -10,7 +10,7 @@ class CriacaoEAtualizacaoMixin(models.Model):
     class Meta:
         abstract = True
 
-    criado_em = models.DateTimeField(auto_now_add=True)
+    criado_em = models.DateTimeField(auto_now_add=True, editable=False)
     atualizado_em = models.DateTimeField(auto_now=True)
 
 
