@@ -11,6 +11,7 @@ User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
+
     full_name = serializers.CharField(source='get_full_name', read_only=True)
 
     class Meta:
@@ -19,6 +20,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class PerfilSerializer(serializers.ModelSerializer):
+
     usuario = serializers.SlugRelatedField(slug_field=User.USERNAME_FIELD, read_only=True)
     login = serializers.SlugField(required=True, write_only=True)
     senha = serializers.CharField(required=True, min_length=4, allow_blank=False, write_only=True)
@@ -46,8 +48,10 @@ class DisciplinaSerializer(serializers.ModelSerializer):
 
 
 class TurmaSerializer(serializers.ModelSerializer):
+
     professor = serializers.PrimaryKeyRelatedField(many=False, queryset=Perfil.objects.all())
     disciplina = serializers.PrimaryKeyRelatedField(many=False, queryset=Disciplina.objects.all())
+    codigo = serializers.CharField(read_only=True)
     qtd_inscritos = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
@@ -60,6 +64,7 @@ class TurmaSerializer(serializers.ModelSerializer):
 
 
 class InscricaoSerializer(serializers.ModelSerializer):
+
     perfil = serializers.PrimaryKeyRelatedField(many=False, queryset=Perfil.objects.all())
     turma = serializers.PrimaryKeyRelatedField(many=False, queryset=Turma.objects.filter(codigo_ativo=True))
 
