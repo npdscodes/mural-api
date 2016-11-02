@@ -29,7 +29,7 @@ class Perfil(CriacaoEAtualizacaoMixin):
     sexo = models.CharField(_('Sexo'), max_length=10, choices=SEXO_CHOICES, blank=True)
     email = models.EmailField(max_length=50, unique=True)
     telefone = models.CharField(max_length=15, validators=[telefone_validacao], blank=True)
-
+    
     def __str__(self):
         return "%s - %s" % (self.nome, self.email)
 
@@ -63,6 +63,9 @@ class Turma(CriacaoEAtualizacaoMixin):
                 self.codigo = gerador_codigo()
         super(Turma, self).save(*args, **kwargs)
 
+    class Meta:
+        ordering = ['-criado_em']
+
     def __str__(self):
         return "{} - {}".format(self.disciplina.nome, self.professor.nome)
 
@@ -71,6 +74,9 @@ class Inscricao(CriacaoEAtualizacaoMixin):
 
     perfil = models.ForeignKey('Perfil', on_delete=models.CASCADE, related_name='minhas_inscricoes')
     turma = models.ForeignKey('Turma', on_delete=models.CASCADE, related_name='alunos')
+
+    class Meta:
+        ordering = ['perfil__nome']
 
     def __str__(self):
         return "%s - %s" % (self.perfil, self.turma)

@@ -44,13 +44,13 @@ class Comentario(models.Model):
     postagem = models.ForeignKey(Postagem, null=False, on_delete=models.CASCADE, related_name="comentarios")
     comentario_pai = models.ForeignKey('self', default=None, null=True, on_delete=models.CASCADE, related_name="respostas")
 
-    def responder(self, comentario):
+    def responder(self, perfil, comentario):
 
         resposta = Comentario.objects.create(
             raiz=False,
             tipo=Comentario.FILHO,
             conteudo=comentario,
-            perfil=self.perfil,
+            perfil=perfil,
             postagem=self.postagem
         )
 
