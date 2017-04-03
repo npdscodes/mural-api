@@ -38,7 +38,7 @@ class PerfilSerializer(serializers.ModelSerializer):
 
 class DisciplinaSerializer(serializers.ModelSerializer):
 
-    turmas = serializers.StringRelatedField(many=True)
+    turmas = serializers.StringRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Disciplina
