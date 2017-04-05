@@ -93,7 +93,19 @@ class TurmaViewSet(DefaultsMixin, viewsets.ModelViewSet):
 class InscricaoViewSet(DefaultsMixin, viewsets.ModelViewSet):
     """Endpoint para a criação e listagem das inscrições"""
 
-    queryset = Inscricao.objects.all()
+    #queryset = Inscricao.objects.all()
     serializer_class = InscricaoSerializer
     search_fields = ('perfil', 'turma',)
     ordering_fields = ('perfil', 'turma',)
+
+    def list(self, request, *args, **kwargs):
+        user = request.user
+        queryset = Inscricao.objects.all()
+
+        if not user.is_superuser:
+            queryset = Inscricao.objects.all(perfil__usuario=user)
+
+        serializer = InscricaoSerializer(queryset, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
