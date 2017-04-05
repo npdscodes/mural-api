@@ -67,7 +67,7 @@ class PerfilViewSet(DefaultsMixin, viewsets.ModelViewSet):
             perfil = Perfil(usuario=user, nome=nome, email=email)
             perfil.save()
 
-            return Response(status=status.HTTP_201_CREATED)
+            return Response(PerfilSerializer(perfil).data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
