@@ -67,7 +67,7 @@ class Turma(CriacaoEAtualizacaoMixin):
         ordering = ['-criado_em']
 
     def __str__(self):
-        return "#{}: {} - {}".format(self.codigo, self.disciplina.nome, self.professor.nome)
+        return "#{}: {} (por {}) - [{}]".format(self.codigo, self.disciplina.nome, self.professor.nome, self.periodo)
 
 
 class Inscricao(CriacaoEAtualizacaoMixin):
