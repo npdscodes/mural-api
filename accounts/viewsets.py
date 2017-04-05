@@ -103,7 +103,7 @@ class InscricaoViewSet(DefaultsMixin, viewsets.ModelViewSet):
         queryset = Inscricao.objects.all()
 
         if not user.is_superuser:
-            queryset = Inscricao.objects.all(perfil__usuario=user)
+            queryset = Inscricao.objects.filter(perfil__usuario=user)
 
         serializer = InscricaoSerializer(queryset, many=True)
 
