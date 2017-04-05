@@ -10,6 +10,8 @@ from .serializers import UserSerializer, PerfilSerializer, DisciplinaSerializer,
 
 from .models import Perfil, Disciplina, Turma, Inscricao
 
+from django.db.models import Q
+
 
 User = get_user_model()
 
@@ -103,7 +105,7 @@ class InscricaoViewSet(DefaultsMixin, viewsets.ModelViewSet):
         queryset = Inscricao.objects.all()
 
         if not user.is_superuser:
-            queryset = Inscricao.objects.filter(perfil__usuario=user)
+            queryset = Inscricao.objects.filter(Q(perfil__usuario=user) | Q(turma__professor__usuario=user))
 
         serializer = InscricaoSerializer(queryset, many=True)
 
