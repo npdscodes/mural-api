@@ -12,6 +12,8 @@ from .models import Perfil, Disciplina, Turma, Inscricao
 
 from django.db.models import Q
 
+import django_filters
+
 
 User = get_user_model()
 
@@ -92,15 +94,23 @@ class TurmaViewSet(DefaultsMixin, viewsets.ModelViewSet):
     ordering_fields = ('codigo',)
 
 
+class InscricaoFilter(django_filters.FilterSet):
+
+    class Meta:
+        model = Inscricao
+        fields = ('perfil', 'turma', )
+
+
 class InscricaoViewSet(DefaultsMixin, viewsets.ModelViewSet):
     """Endpoint para a criação e listagem das inscrições"""
 
     queryset = Inscricao.objects.all()
     serializer_class = InscricaoSerializer
+    filter_class = InscricaoFilter
     search_fields = ('perfil', 'turma',)
     ordering_fields = ('perfil', 'turma',)
 
-    def list(self, request, *args, **kwargs):
+    """def list(self, request, *args, **kwargs):
         user = request.user
         queryset = Inscricao.objects.all()
 
@@ -110,4 +120,4 @@ class InscricaoViewSet(DefaultsMixin, viewsets.ModelViewSet):
         serializer = InscricaoSerializer(queryset, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
-
+    """

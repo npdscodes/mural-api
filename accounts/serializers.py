@@ -19,6 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class PerfilSerializer(serializers.ModelSerializer):
+    #TODO: resolver divergencia de nomes usuario e login
     usuario = serializers.SlugRelatedField(slug_field=User.USERNAME_FIELD, read_only=True)
     login = serializers.SlugField(required=True, write_only=True)
     senha = serializers.CharField(required=True, min_length=4, allow_blank=False, write_only=True)
@@ -26,7 +27,6 @@ class PerfilSerializer(serializers.ModelSerializer):
     class Meta:
         model = Perfil
         fields = ('id', 'usuario', 'login', 'nome', 'email','senha')
-
 
     def validate_login(self, value):
         if User.objects.filter(username=value).exists():
@@ -52,7 +52,6 @@ class TurmaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Turma
-        fields = ('id', 'codigo', 'nome', 'periodo', 'codigo_ativo', 'professor', 'disciplina', 'qtd_inscritos')
         fields = ('id', 'criado_em','codigo', 'periodo', 'codigo_ativo', 'professor', 'disciplina', 'qtd_inscritos')
 
     def get_qtd_inscritos(self, obj):

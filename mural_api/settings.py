@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_swagger',
+    'crispy_forms',
     # Internal apps
     'accounts',
     'timeline',
@@ -130,6 +131,7 @@ STATICFILES_DIRS = (
 
 # Configuracao de Paginacao do DRF
 REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 100
 }
